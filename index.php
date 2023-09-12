@@ -1,52 +1,56 @@
-<!doctype html>
-<html lang="pt-br">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<?php 
+    include "conexao.php";
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    $sql = "SELECT * FROM produtos";
+    $result = mysqli_query($conn, $sql);
 
-    <title>TesteCrud</title>
-  </head>
-  <body>
-    
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Cadastro de Produtos</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="index.php">Home<span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link" href="?page=novo">Novo Usuário</a>
-                <a class="nav-item nav-link" href="?page=listar">Listar Usuários</a>
-            </div>
-        </div>
-    </nav>
+    if(!$result) {
+        die("Erro na consulta: " .mysqli_error($conn));
+    }
+?>
 
-    <div class="container">
-        <div class="row">
-            <div class="col mt-5">
-                <?php 
-                    switch(@$_REQUEST['page']) {
-                        case "novo":
-                            include('novo-usuario.php');
-                            break;
-                        case "listar":
-                            include('listar-usuario.php');
-                            break;
-                        default:
-                            print "<h1>Bem Vindos!</h1:";
-                    }
-                ?>
-            </div>
-        </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>DWELLO</title>
+</head>
+<body>
+    <div>
+    <h2>Controle de Estoque</h2>
+    <a href="criar.php"><button>Registrar nova mercadoria</button></a>
+    <table>
+        <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Valor</th>
+            <th>Cor</th>
+            <th>Material</th>
+            <th>Tamanho</th>
+            <th>Formato</th>
+            <th>Peso</th>
+            <th>Quantidade disponível no estoque</th>
+        </tr>
+
+        <?php while($row = mysqli_fetch_assoc($result)): ?>
+            <tr>
+                <td><?php echo $row['codigo']; ?></td>
+                <td><?php echo $row['nome']; ?></td>
+                <td><?php echo $row['valor']; ?></td>
+                <td><?php echo $row['cor']; ?></td>
+                <td><?php echo $row['material']; ?></td>
+                <td><?php echo $row['tamanho']; ?></td>
+                <td><?php echo $row['formato']; ?></td>
+                <td><?php echo $row['peso']; ?></td>
+                <td><?php echo $row['qnt_estoque']; ?></td>
+                <td>
+                    <a href="visualizar.php?codigo=<?php echo $row['codigo']; ?>"><button>Detalhes</button></a>
+                    <a href="editar.php?codigo=<?php echo $row['codigo']; ?>"><button>Editar</button></a>
+                    <a href="deletar.php?codigo=<?php echo $row['codigo']; ?>"><button type="button">Excluir</button></a>
+                </td>
+            </tr>
+        <?php endwhile; ?>
+    </table>
     </div>
-
-   
-
-    <script src="js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  </body>
+</body>
 </html>
